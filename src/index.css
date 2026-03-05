@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark premium palette */
+    --background: 222 47% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 222 40% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 222 40% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Gold accent - primary brand color */
+    --primary: 44 37% 59%;
+    --primary-foreground: 222 47% 6%;
+
+    /* Lighter gold for hover states */
+    --primary-glow: 44 45% 65%;
+
+    --secondary: 222 30% 15%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 222 25% 18%;
+    --muted-foreground: 220 15% 65%;
+
+    --accent: 44 37% 59%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 222 30% 18%;
+    --input: 222 30% 18%;
+    --ring: 44 37% 59%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --gold: 44 37% 59%;
+    --gold-light: 44 45% 65%;
+    --gold-dark: 44 35% 45%;
+    --navy-deep: 222 47% 6%;
+    --navy-light: 222 40% 12%;
+    --navy-accent: 222 35% 18%;
+
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(44 37% 59%), hsl(44 40% 50%));
+    --gradient-gold-subtle: linear-gradient(135deg, hsl(44 37% 59% / 0.1), hsl(44 40% 50% / 0.05));
+    --gradient-navy: linear-gradient(180deg, hsl(222 47% 6%), hsl(222 40% 10%));
+    --gradient-radial: radial-gradient(ellipse at center, hsl(222 40% 12%), hsl(222 47% 6%));
+
+    /* Shadows */
+    --shadow-gold: 0 0 30px hsl(44 37% 59% / 0.2);
+    --shadow-gold-intense: 0 0 50px hsl(44 37% 59% / 0.3);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.3);
+    --shadow-elevated: 0 8px 40px hsl(0 0% 0% / 0.4);
+
+    /* Typography */
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 44 37% 59%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 30% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 44 37% 59%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 0 0% 98%;
+    --card: 222 40% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 222 40% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 44 37% 59%;
+    --primary-foreground: 222 47% 6%;
+    --secondary: 222 30% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 222 25% 18%;
+    --muted-foreground: 220 15% 65%;
+    --accent: 44 37% 59%;
+    --accent-foreground: 222 47% 6%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 222 30% 18%;
+    --input: 222 30% 18%;
+    --ring: 44 37% 59%;
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 44 37% 59%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 222 30% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 222 30% 18%;
+    --sidebar-ring: 44 37% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+
+  section {
+    @apply scroll-mt-20;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .text-gold {
+    @apply text-primary;
+  }
+
+  .bg-gold {
+    @apply bg-primary;
+  }
+
+  .border-gold {
+    @apply border-primary;
+  }
+
+  .gradient-gold-text {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .glow-gold-intense {
+    box-shadow: var(--shadow-gold-intense);
+  }
+
+  .card-premium {
+    @apply bg-card border border-border rounded-xl;
+    box-shadow: var(--shadow-card);
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in-delay-1 {
+    animation: fadeIn 0.6s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-delay-2 {
+    animation: fadeIn 0.6s ease-out 0.4s forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in-delay-3 {
+    animation: fadeIn 0.6s ease-out 0.6s forwards;
+    opacity: 0;
+  }
+
+  .animate-pulse-gold {
+    animation: pulseGold 2s infinite;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .hover-glow:hover {
+    box-shadow: var(--shadow-gold);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGold {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(44 37% 59% / 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px hsl(44 37% 59% / 0.5);
+  }
+}
