@@ -14,4 +14,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://antoniodiascontador.com/sitemap.xml
-
