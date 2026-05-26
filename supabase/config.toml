@@ -1,0 +1,8 @@
+[functions.chat]
+verify_jwt = false
+
+[functions.gerar-embedding]
+verify_jwt = true
+
+[functions.testar-evolution]
+verify_jwt = true

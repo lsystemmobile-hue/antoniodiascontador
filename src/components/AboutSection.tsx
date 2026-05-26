@@ -6,9 +6,9 @@ export const AboutSection = () => {
   const { t } = useLanguage();
 
   const features = [
-    { icon: Shield, label: 'Segurança' },
-    { icon: Globe, label: 'Internacional' },
-    { icon: Users, label: 'Personalizado' },
+    { icon: Shield, label: t('about.feature.security') },
+    { icon: Globe, label: t('about.feature.international') },
+    { icon: Users, label: t('about.feature.personalized') },
   ];
 
   return (
@@ -80,15 +80,15 @@ export const AboutSection = () => {
             <div className="grid grid-cols-3 gap-6 mt-10 pt-10 border-t border-border">
               <div>
                 <div className="font-display text-3xl font-bold text-primary">10+</div>
-                <div className="text-sm text-muted-foreground mt-1">Anos de Experiência</div>
+                <div className="text-sm text-muted-foreground mt-1">{t('about.stats.experience')}</div>
               </div>
               <div>
                 <div className="font-display text-3xl font-bold text-primary">500+</div>
-                <div className="text-sm text-muted-foreground mt-1">Clientes Atendidos</div>
+                <div className="text-sm text-muted-foreground mt-1">{t('about.stats.clients')}</div>
               </div>
               <div>
                 <div className="font-display text-3xl font-bold text-primary">20+</div>
-                <div className="text-sm text-muted-foreground mt-1">Países</div>
+                <div className="text-sm text-muted-foreground mt-1">{t('about.stats.countries')}</div>
               </div>
             </div>
           </ScrollReveal>

@@ -1,6 +1,7 @@
-import { FileText, Calculator, Plane, Building2 } from 'lucide-react';
+import { FileText, Calculator, Plane, Building2, Bot } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { openAssistantChat } from '@/lib/chatEvents';
 
 export const ServicesSection = () => {
   const { t } = useLanguage();
@@ -10,21 +11,25 @@ export const ServicesSection = () => {
       icon: FileText,
       titleKey: 'services.saida.title',
       descKey: 'services.saida.desc',
+      promptKey: 'chat.prompt.saida',
     },
     {
       icon: Calculator,
       titleKey: 'services.contabil.title',
       descKey: 'services.contabil.desc',
+      promptKey: 'chat.prompt.ir',
     },
     {
       icon: Plane,
       titleKey: 'services.imigracao.title',
       descKey: 'services.imigracao.desc',
+      promptKey: 'chat.prompt.planning',
     },
     {
       icon: Building2,
       titleKey: 'services.sucessorio.title',
       descKey: 'services.sucessorio.desc',
+      promptKey: 'chat.prompt.sucessorio',
     },
   ];
 
@@ -70,6 +75,15 @@ export const ServicesSection = () => {
                 <p className="text-muted-foreground leading-relaxed">
                   {t(service.descKey)}
                 </p>
+
+                <button
+                  type="button"
+                  onClick={() => openAssistantChat(t(service.promptKey))}
+                  className="mt-6 inline-flex items-center gap-2 rounded-lg border border-primary/25 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:border-primary/50 hover:bg-primary/10"
+                >
+                  <Bot className="h-4 w-4" />
+                  {t('services.askCta')}
+                </button>
 
                 {/* Decorative corner */}
                 <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/5 to-transparent rounded-tr-2xl" />

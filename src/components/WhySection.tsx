@@ -46,10 +46,10 @@ export const WhySection = () => {
 
       <div className="relative z-10 section-container">
         {/* Header */}
-        <ScrollReveal className="text-center mb-16">
-          <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-            Diferenciais
-          </span>
+          <ScrollReveal className="text-center mb-16">
+            <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
+              {t('why.eyebrow')}
+            </span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t('why.title')}
           </h2>

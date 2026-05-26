@@ -1,83 +1,104 @@
-import { ArrowDown } from 'lucide-react';
-import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon';
+import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-
-const WHATSAPP_LINK = 'https://api.whatsapp.com/send/?phone=15997705571&text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20uma%20análise%20da%20minha%20situação%20fiscal.%20Sou%20brasileiro(a)%20morando%20no%20exterior.';
+import { openAssistantChat } from '@/lib/chatEvents';
 
 export const HeroSection = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const renderHeadline = (text: string) =>
+    text.split(' ').map((word, index) => {
+      const highlightWords = ['ir', 'tax', 'taxes'];
+      const normalizedWord = word.toLowerCase().replace(/[.,?]/g, '');
+      const isHighlight = highlightWords.includes(normalizedWord);
+
+      return (
+        <span key={`${normalizedWord}-${index}`}>
+          {isHighlight ? <span className="text-primary">{word}</span> : word}{' '}
+        </span>
+      );
+    });
+  const renderSubtitle = (text: string, forceMobileBreak = false) => {
+    const highlightText = language === 'pt' ? '2 minutos' : '2 minutes';
+    const breakText = language === 'pt' ? ' em 2 minutos.' : ' in 2 minutes.';
+    const withBreak = forceMobileBreak ? text.replace(breakText, `\n${breakText.trimStart()}`) : text;
+    const parts = withBreak.split(highlightText);
+
+    if (parts.length === 1) return text;
+
+    return parts.flatMap((part, index) => [
+      <span key={`subtitle-part-${index}`} className="whitespace-pre-line">
+        {part}
+      </span>,
+      index < parts.length - 1 ? (
+        <span key={`subtitle-highlight-${index}`} className="font-semibold text-primary">
+          {highlightText}
+        </span>
+      ) : null,
+    ]);
+  };
+  const desktopHeadline = language === 'pt' ? 'Pagando IR a mais morando fora?' : t('hero.mobileHeadline');
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <section id="hero" className="relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[#020617]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(222_40%_15%)_0%,_transparent_80%)]" />
 
-      {/* Custom Image Background */}
+      {/* Decorative background video; the poster preserves the hero while it loads. */}
       <div className="absolute inset-0 z-0">
-        <img
-          src="/hero-bg.jpg"
-          alt=""
-          className="w-full h-full object-cover opacity-[0.20] grayscale blur-[1px]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/80 via-transparent to-[#020617]" />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/hero-bg.jpg"
+          aria-hidden="true"
+          className="h-full w-full object-cover opacity-[0.18] grayscale blur-[1px]"
+        >
+          <source src="/video.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/50 md:bg-gradient-to-b md:from-[#020617]/72 md:via-[#020617]/32 md:to-[#020617]/76" />
       </div>
 
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl opacity-50" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/5 rounded-full blur-3xl opacity-50" />
+      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-primary/5 opacity-50 blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-primary/5 opacity-50 blur-3xl" />
 
       {/* Gold accent lines */}
       <div className="absolute top-20 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
-      <ScrollReveal className="relative z-10 section-container text-center py-20">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-sm text-primary font-medium">Contador do Imigrante</span>
+      <ScrollReveal className="relative z-10 section-container flex min-h-[100svh] w-full items-center justify-center pt-16 pb-[15.5rem] text-center md:min-h-screen md:pt-20 md:pr-[196px] md:pb-[17.5rem]">
+        <div className="mx-auto flex w-full flex-col items-center justify-center">
+          {/* Main Headline */}
+          <h1 className="mx-auto mb-3 max-w-4xl font-display text-[1.7rem] font-bold leading-[1.08] text-foreground md:mb-4 md:text-[3.2rem] lg:text-[3.4rem]">
+            <span className="md:hidden">
+              Pagando <span className="text-primary">IR</span> a mais
+              <br />
+              morando fora?
+            </span>
+            <span className="hidden md:inline">{renderHeadline(desktopHeadline)}</span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mx-auto mb-5 max-w-[22rem] text-[0.95rem] leading-relaxed text-muted-foreground md:mb-7 md:max-w-none md:text-lg">
+            <span className="md:hidden">{renderSubtitle(t('hero.mobileSubtitle'), true)}</span>
+            <span className="hidden md:inline">{renderSubtitle(t('hero.mobileSubtitle'))}</span>
+          </p>
+
+          {/* Primary CTA */}
+          <div className="flex w-full justify-center">
+            <Button
+              variant="hero"
+              size="xl"
+              onClick={() => openAssistantChat()}
+              className="h-14 w-full rounded-xl px-7 text-base sm:h-16 md:max-w-sm md:text-lg"
+            >
+              {t('hero.analysisCta')}
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
-
-        {/* Main Headline */}
-        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-6 max-w-5xl mx-auto">
-          {t('hero.headline').split(' ').map((word, index) => {
-            const highlightWords = ['fiscal', 'tax', 'taxes'];
-            const isHighlight = highlightWords.some(hw => word.toLowerCase().includes(hw));
-            return (
-              <span key={index}>
-                {isHighlight ? (
-                  <span className="text-primary">{word}</span>
-                ) : (
-                  word
-                )}{' '}
-              </span>
-            );
-          })}
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-          {t('hero.subtitle')}
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-          <Button variant="hero" size="xl" asChild>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3">
-              <WhatsAppIcon className="w-5 h-5" />
-              {t('hero.cta')}
-            </a>
-          </Button>
-        </div>
-
-        {/* Scroll Indicator */}
-        <a
-          href="#about"
-          className="inline-flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-        >
-          <span className="text-sm">{t('hero.scroll')}</span>
-          <ArrowDown className="w-5 h-5 animate-bounce" />
-        </a>
       </ScrollReveal>
     </section>
   );

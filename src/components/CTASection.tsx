@@ -1,10 +1,10 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Bot } from 'lucide-react';
 import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-
-const WHATSAPP_LINK = 'https://api.whatsapp.com/send/?phone=15997705571&text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20uma%20análise%20da%20minha%20situação%20fiscal.%20Sou%20brasileiro(a)%20morando%20no%20exterior.';
+import { openAssistantChat } from '@/lib/chatEvents';
+import { WHATSAPP_LINK } from '@/lib/contact';
 
 export const CTASection = () => {
   const { t } = useLanguage();
@@ -25,7 +25,7 @@ export const CTASection = () => {
             <div className="p-8 md:p-12 lg:p-16 rounded-3xl bg-card border border-primary/20 shadow-[0_0_60px_hsl(43_85%_55%_/_0.1)]">
               {/* Icon */}
               <div className="w-20 h-20 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center mx-auto mb-8 animate-pulse-gold">
-                <WhatsAppIcon className="w-10 h-10 text-primary" />
+                <Bot className="w-10 h-10 text-primary" />
               </div>
 
               {/* Content */}
@@ -37,13 +37,27 @@ export const CTASection = () => {
               </p>
 
               {/* CTA Button */}
-              <Button variant="gold" className="group h-auto py-4 px-10 rounded-2xl text-base transition-all duration-300 hover:shadow-primary/20 hover:-translate-y-0.5" asChild>
-                <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4">
-                  <WhatsAppIcon className="w-5 h-5" />
+              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button
+                variant="gold"
+                className="group h-auto w-full justify-center rounded-2xl px-8 py-4 text-base transition-all duration-300 hover:-translate-y-0.5 hover:shadow-primary/20 sm:w-[20rem]"
+                onClick={() => openAssistantChat()}
+              >
+                  <Bot className="w-5 h-5" />
                   {t('cta.button')}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                variant="goldOutline"
+                className="h-auto w-full justify-center rounded-2xl px-8 py-4 text-base sm:w-[20rem]"
+                asChild
+              >
+                <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex w-full items-center justify-center gap-3">
+                  <WhatsAppIcon className="w-5 h-5" />
+                  {t('cta.whatsapp')}
                 </a>
               </Button>
+              </div>
 
               {/* Note */}
               <p className="text-muted-foreground text-sm mt-6">

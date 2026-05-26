@@ -1,8 +1,7 @@
 import { Instagram, Globe } from 'lucide-react';
 import { WhatsAppIcon } from '@/components/icons/WhatsAppIcon';
 import { useLanguage } from '@/contexts/LanguageContext';
-
-const WHATSAPP_LINK = 'https://api.whatsapp.com/send/?phone=15997705571&text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20uma%20análise%20da%20minha%20situação%20fiscal.%20Sou%20brasileiro(a)%20morando%20no%20exterior.';
+import { WHATSAPP_LINK } from '@/lib/contact';
 
 export const Footer = () => {
   const { t } = useLanguage();

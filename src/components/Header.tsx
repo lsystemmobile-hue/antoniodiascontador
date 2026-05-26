@@ -1,24 +1,74 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Menu, X, Globe, User, Briefcase, Phone } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-
-const WHATSAPP_LINK = 'https://api.whatsapp.com/send/?phone=15997705571&text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20uma%20análise%20da%20minha%20situação%20fiscal.%20Sou%20brasileiro(a)%20morando%20no%20exterior.';
+import { openAssistantChat } from '@/lib/chatEvents';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const scrollAnimationRef = useRef<number | null>(null);
   const { language, setLanguage, t } = useLanguage();
+  const desktopNavLinkClass =
+    'group relative flex items-center gap-2 text-muted-foreground transition-all duration-300 hover:-translate-y-0.5 hover:text-primary';
+  const desktopNavLabelClass =
+    'relative after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-primary/80 after:transition-transform after:duration-300 after:content-[\'\'] group-hover:after:scale-x-100';
 
   const toggleLanguage = () => {
     setLanguage(language === 'pt' ? 'en' : 'pt');
   };
 
+  useEffect(() => {
+    return () => {
+      if (scrollAnimationRef.current !== null) {
+        cancelAnimationFrame(scrollAnimationRef.current);
+      }
+    };
+  }, []);
+
+  const smoothScrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const header = document.querySelector('header');
+    const headerHeight = header instanceof HTMLElement ? header.offsetHeight : 0;
+    const targetY = Math.max(
+      element.getBoundingClientRect().top + window.scrollY - headerHeight - 8,
+      0
+    );
+
+    if (scrollAnimationRef.current !== null) {
+      cancelAnimationFrame(scrollAnimationRef.current);
+    }
+
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 600;
+    const startTime = performance.now();
+
+    const easeInOutCubic = (t: number) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeInOutCubic(progress);
+
+      window.scrollTo(0, startY + distance * easedProgress);
+
+      if (progress < 1) {
+        scrollAnimationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      scrollAnimationRef.current = null;
+    };
+
+    scrollAnimationRef.current = requestAnimationFrame(animate);
+  };
+
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    const element = document.getElementById(id.replace('#', ''));
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    smoothScrollToSection(id);
     setIsMenuOpen(false);
   };
 
@@ -27,7 +77,7 @@ export const Header = () => {
       <div className="section-container">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2">
+          <a href="#hero" onClick={(e) => handleScroll(e, 'hero')} className="flex items-center gap-2">
             <span className="font-display text-xl md:text-2xl font-bold text-foreground">
               Antonio <span className="text-primary">Dias</span>
             </span>
@@ -38,26 +88,26 @@ export const Header = () => {
             <a
               href="#about"
               onClick={(e) => handleScroll(e, 'about')}
-              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+              className={desktopNavLinkClass}
             >
               <User className="w-4 h-4" />
-              {t('nav.about')}
+              <span className={desktopNavLabelClass}>{t('nav.about')}</span>
             </a>
             <a
               href="#services"
               onClick={(e) => handleScroll(e, 'services')}
-              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+              className={desktopNavLinkClass}
             >
               <Briefcase className="w-4 h-4" />
-              {t('nav.services')}
+              <span className={desktopNavLabelClass}>{t('nav.services')}</span>
             </a>
             <a
               href="#contact"
               onClick={(e) => handleScroll(e, 'contact')}
-              className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+              className={desktopNavLinkClass}
             >
               <Phone className="w-4 h-4" />
-              {t('nav.contact')}
+              <span className={desktopNavLabelClass}>{t('nav.contact')}</span>
             </a>
           </nav>
 
@@ -77,11 +127,9 @@ export const Header = () => {
               variant="gold"
               size="sm"
               className="hidden md:flex"
-              asChild
+              onClick={() => openAssistantChat()}
             >
-              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
-                WhatsApp
-              </a>
+              {t('hero.cta')}
             </Button>
 
             {/* Mobile Menu Button */}
@@ -122,6 +170,16 @@ export const Header = () => {
                 <Phone className="w-5 h-5 text-primary" />
                 <span className="font-medium">{t('nav.contact')}</span>
               </a>
+              <Button
+                variant="gold"
+                className="mt-2 w-full"
+                onClick={() => {
+                  openAssistantChat();
+                  setIsMenuOpen(false);
+                }}
+              >
+                {t('hero.cta')}
+              </Button>
             </nav>
           </div>
         )}

@@ -6,7 +6,7 @@ import { ServicesSection } from '@/components/ServicesSection';
 import { WhoSection } from '@/components/WhoSection';
 import { WhySection } from '@/components/WhySection';
 import { CTASection } from '@/components/CTASection';
-import { WhatsAppFloating } from '@/components/WhatsAppFloating';
+import { ChatWidget } from '@/components/ChatWidget';
 import { Footer } from '@/components/Footer';
 
 const Index = () => {
@@ -22,7 +22,7 @@ const Index = () => {
           <WhySection />
           <CTASection />
         </main>
-        <WhatsAppFloating />
+        <ChatWidget />
         <Footer />
       </div>
     </LanguageProvider>

@@ -28,7 +28,7 @@ export const WhoSection = () => {
           {/* Header */}
           <ScrollReveal className="text-center mb-16">
             <span className="text-primary font-medium text-sm tracking-wider uppercase mb-4 block">
-              Público Ideal
+              {t('who.eyebrow')}
             </span>
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               {t('who.title')}
