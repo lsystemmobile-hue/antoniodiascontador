@@ -68,7 +68,7 @@ export const HeroSection = () => {
       {/* Gold accent lines */}
       <div className="absolute top-20 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
-      <ScrollReveal className="relative z-10 section-container flex min-h-[100svh] w-full items-center justify-center pt-16 pb-[15.5rem] text-center md:min-h-screen md:pt-20 md:pr-[196px] md:pb-[17.5rem]">
+      <ScrollReveal className="relative z-10 section-container flex min-h-[100svh] w-full items-center justify-center pt-16 pb-[15.5rem] text-center md:min-h-screen md:pt-20 md:pb-[17.5rem]">
         <div className="mx-auto flex w-full flex-col items-center justify-center">
           {/* Main Headline */}
           <h1 className="mx-auto mb-3 max-w-4xl font-display text-[1.7rem] font-bold leading-[1.08] text-foreground md:mb-4 md:text-[3.2rem] lg:text-[3.4rem]">

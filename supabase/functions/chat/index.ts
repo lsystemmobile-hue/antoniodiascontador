@@ -1,4 +1,3 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const DEFAULT_ALLOWED_ORIGIN = "https://antoniodiascontador.com";
@@ -1085,7 +1084,7 @@ async function notifyAntonioLead(
   return { ok: true } as const;
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     if (!isAllowedOrigin(resolveOrigin(req))) return json(req, { error: "Origem nao autorizada." }, 403);
     return json(req, { ok: true });
@@ -1227,21 +1226,57 @@ serve(async (req: Request) => {
       }
     }
 
-    const { data: knowledgeRows } = await supabase
-      .from("base_conhecimento")
-      .select("titulo, conteudo, categoria")
-      .eq("ativo", true)
-      .limit(50);
+    const userMsgs = history
+      .filter((message) => message.papel === "usuario")
+      .map((message) => clean(message.conteudo))
+      .slice(-6);
+    const queryText = userMsgs.concat([assunto]).join(" ");
+    const geminiKeyForEmb = clean(cfg.gemini_api_key);
+    let knowledgeContext = "";
 
-    const knowledgeContext = buildKnowledgeContext(
-      ((knowledgeRows as KnowledgeRow[] | null) || []),
-      history
-        .filter((message) => message.papel === "usuario")
-        .map((message) => clean(message.conteudo))
-        .slice(-6)
-        .join(" "),
-      assunto,
-    );
+    if (geminiKeyForEmb) {
+      try {
+        const embRes = await fetch(
+          `${GEMINI_BASE}/gemini-embedding-001:embedContent?key=${geminiKeyForEmb}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: { parts: [{ text: queryText }] }, output_dimensionality: 768 }),
+          },
+        );
+        if (embRes.ok) {
+          const embData = await embRes.json();
+          const qVec = embData.embedding?.values as number[] | undefined;
+          if (qVec && qVec.length > 0) {
+            const { data: vRows } = await supabase.rpc("buscar_conhecimento", {
+              query_embedding: `[${qVec.join(",")}]`,
+              limite: 3,
+            });
+            const matched = (vRows as KnowledgeRow[] | null) ?? [];
+            if (matched.length > 0) {
+              knowledgeContext = matched
+                .map((row) => `- ${clean(row.titulo) || "Base de conhecimento"}: ${truncateText(clean(row.conteudo), 450)}`)
+                .join("\n");
+            }
+          }
+        }
+      } catch {
+        // fallback para busca por palavras-chave
+      }
+    }
+
+    if (!knowledgeContext) {
+      const { data: knowledgeRows } = await supabase
+        .from("base_conhecimento")
+        .select("titulo, conteudo, categoria")
+        .eq("ativo", true)
+        .limit(50);
+      knowledgeContext = buildKnowledgeContext(
+        ((knowledgeRows as KnowledgeRow[] | null) || []),
+        userMsgs.join(" "),
+        assunto,
+      );
+    }
 
     let resposta = "";
 
